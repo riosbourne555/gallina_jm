@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>La Gallina Parkour de MJ</title>
+    
+    <!-- Enlace al manifiesto de la PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Script para registrar el Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registrado con éxito', reg))
+                    .catch(err => console.error('Error al registrar el Service Worker', err));
+            });
+        }
+    </script>
+</head>
+<body>
+    <!-- Audio de Fondo (Oculto y en Bucle) -->
+    <!-- Reemplaza "musica_16bits.mp3" por el nombre exacto de tu archivo de audio (puede ser .mp3, .wav o .mid) -->
+    <audio id="bg-music" src="musica.mp3" loop></audio>
+
+    <div id="game-container">
+        <!-- Puntuación en vivo -->
+        <div id="score-board" class="hidden">Puntos: <span id="score">0</span></div>
+
+        <!-- Pantalla de Inicio / Menú Principal -->
+        <div id="main-menu-screen">
+            <h1>La Gallina Parkour de MJ</h1>
+            <div class="menu-art">
+                <img src="gallina_subiendo.png" alt="Gallina Azul Saltando" onerror="this.style.display='none'">
+            </div>
+            <div class="menu-buttons">
+                <button id="start-btn">Iniciar Parkour</button>
+                <button id="exit-btn">Salir</button>
+            </div>
+        <br>
+        <div><h2>Juego de Nuna</h2></div>
+        </div>
+
+        <!-- Pantalla de Game Over y Ranking -->
+        <div id="game-over-screen" class="hidden">
+            <h1>¡GAME OVER!</h1>
+            <p>Tu puntuación: <span id="final-score">0</span></p>
+            
+            <!-- Registro de Nombre -->
+            <div id="score-registration">
+                <input type="text" id="player-name" placeholder="Tu Nombre" maxlength="10">
+                <button id="save-score-btn">Guardar Puntuación</button>
+            </div>
+
+            <!-- Tabla de posiciones -->
+            <div id="leaderboard">
+                <h3>🏆 TOP RANKING</h3>
+                <ol id="leaderboard-list"></ol>
+            </div>
+
+            <button id="restart-btn" class="hidden">Jugar de Nuevo</button>
+        </div>
+
+        <!-- Lienzo del juego -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Control táctil inferior -->
+        <div id="controls" class="hidden">
+            <button id="jump-btn">SALTAR</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <!-- Activación del sonido mediante la interacción del usuario -->
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const bgMusic = document.getElementById('bg-music');
+
+        // Función para reproducir de forma segura
+        function playMusic() {
+            bgMusic.play().catch(error => {
+                console.log("El navegador bloqueó el audio temporalmente hasta una mayor interacción:", error);
+            });
+        }
+
+        // Iniciar música al presionar "Iniciar Parkour"
+        if (startBtn) {
+            startBtn.addEventListener('click', playMusic);
+        }
+
+        // Reiniciar/Asegurar música al jugar de nuevo si se pausó
+        if (restartBtn) {
+            restartBtn.addEventListener('click', playMusic);
+        }
+    </script>
+</body>
+</html>
